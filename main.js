@@ -32,35 +32,61 @@ let maxAngle = Math.PI;
 let arrowNum = 0;
 let arrow = {};
 let arrowCool = 10;
+let playerCircle = new Circle(8);
+let shieldDir = 0;
+playerCircle.setPosition(getWidth()/6, 3*getHeight()/4);
+add(playerCircle); 
 // starts ticking the undyne section when the score reaches 10
 function tickUndyneMini() {
     if (score >= 10) {
-        if (Randomizer.nextInt(0, 5) == 1 && arrowCool == 0) {
-            arrow[arrowNum] = new Rectangle(20,10);
+        if (Randomizer.nextInt(0, 1) == 1 && arrowCool == 0) {
+            arrow[arrowNum] = new WebImage("pixil-frame-0-(4).png");
+            arrow[arrowNum].setSize(20,10);
             arrow[arrowNum].setPosition(getWidth()/6-10, 3*getHeight()/4 )
             switch (Randomizer.nextInt(1,4)) {
                 case 1:
-                    arrow[arrowNum].move(50,0);
+                    arrow[arrowNum].move(75,-5);
                     break;
                 case 2:
-                    arrow[arrowNum].move(-50,0);
+                    arrow[arrowNum].move(-75,-5);
+
                     break;
                 case 3:
-                    arrow[arrowNum].move(0,50);
+                    arrow[arrowNum].rotate(90);
+                    arrow[arrowNum].move(0,75);
                     break;
                 case 4:
-                    arrow[arrowNum].move(0,-50);
+                    arrow[arrowNum].rotate(90);
+                    arrow[arrowNum].move(0,-75);
                     break;
             }
             add(arrow[arrowNum]);
             arrowNum++;
-            arrowCool = 11;
-            //if arrow isin't cool, this won't run. :(s
+            arrowCool = 51;
+            //if arrow isin't cool, this won't run. :(
         } else  if (arrowCool == 0) {
-            arrowCool = 11;
+            arrowCool = 51;
         }
         arrowCool--;
-        console.log(arrowCool);
+        for (let o = 0; o != arrowNum; o++) {
+            if (arrow[o].getX() > 15 + playerCircle.getX() || arrow[o].getX() < playerCircle.getX() - 35) {
+                if (arrow[o].getX() < playerCircle.getX()) {
+                    arrow[o].move(.2,0);
+                } else {
+                    arrow[o].move(-.2,0);
+                }
+            } else if (arrow[o].getY() > 18 + playerCircle.getY() || arrow[o].getY() < playerCircle.getY() - 28) {
+                if (arrow[o].getY() < playerCircle.getY()) {
+                    arrow[o].move(0,.2);
+                } else if (arrow[o].getY() > playerCircle.getY()){
+                    arrow[o].move(0,-.2);
+                }
+            } else {
+                if (arrow[o].getX() == 15 + playerCircle.getX() && shieldDir == 1) {
+
+                }
+            }
+        }
     }
 }
 // ticks the timing minigame
