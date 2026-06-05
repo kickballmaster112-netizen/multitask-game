@@ -44,6 +44,15 @@ shield.setPosition(getWidth()/6+5, 3*getHeight()/4-10)
 add(shield);
 playerCircle.setPosition(getWidth()/6, 3*getHeight()/4);
 add(playerCircle); 
+let playerLine1 = new Line(5*getWidth()/6, getHeight()/2, 5*getWidth()/6, getHeight()/2 + 90);
+let playerLine2 = new Line(5*getWidth()/6, getHeight(), 5*getWidth()/6, getHeight() - 90);
+playerLine1.lineWidth = 10;
+playerLine2.lineWidth = 10;
+add(playerLine1);
+add(playerLine2);
+let enemyCool = 100;
+let enemy = {};
+let enemyNum = 0
 // images for the score numbers (unfini)
 let link = {};
 
@@ -57,24 +66,53 @@ link[6] ="https://codehs.com/uploads/8b09004f76b166df7ce7e722d74f145c";
 link[7] ="https://codehs.com/uploads/4b9e6eebf1b22c94384afd13d2662a71";
 link[8] ="https://codehs.com/uploads/49820f66aee096d0b57bd0284a5c698f";
 link[9] ="https://codehs.com/uploads/0b51d0feb8c0b81fa30c942da985f159";
+link[10] ="https://codehs.com/uploads/d41917d8e296c2d380faadb4f8ba8d55";
+link[20] ="https://codehs.com/uploads/1bf7421afc7c5a7d7b35e66eedce00d4";
+link[30] ="https://codehs.com/uploads/7f641724028c26f57df611e27878885c";
+link[40] ="https://codehs.com/uploads/e80d3268f5c115b7e4f37a614a606d40";
+link[50] ="https://codehs.com/uploads/18eab2b3498351ec6c34368e627ea4e0";
+link[60] ="https://codehs.com/uploads/8b09004f76b166df7ce7e722d74f145c";
+link[70] ="https://codehs.com/uploads/4b9e6eebf1b22c94384afd13d2662a71";
+link[80] ="https://codehs.com/uploads/49820f66aee096d0b57bd0284a5c698f";
+link[90] ="https://codehs.com/uploads/0b51d0feb8c0b81fa30c942da985f159";
 let scoreText = new WebImage("https://codehs.com/uploads/d356c669da69b7790f73e290ea09c02c");
 scoreText.setPosition(getWidth()/2 - 128, getHeight()/4 - 50)
 add(scoreText);
 let numbers = {};
 for (let u = 0; u != 10; u++) {
     numbers[u] = new WebImage(link[u]);
-    numbers[u].setPosition(0, 0);
+    numbers[u].setPosition(9999, 9999);
     numbers[u].setSize(96,96);
     add(numbers[u]);
 }
+for (let u = 10; u != 90; u += 10) {
+    numbers[u] = new WebImage(link[u]);
+    numbers[u].setPosition(9999, 9999);
+    numbers[u].setSize(96,96);
+    add(numbers[u]);
+}
+function tickArrowMini() {
+    if (Randomizer.nextBoolean() && enemyCool == 0) {
+        enemy[enemyNum] = new WebImage("https://codehs.com/uploads/04b941dc93035ed51c9aa77e6f639b2b");
+        enemy[enemyNum].setPosition(5*getHeight()/6 + 100*Randomizer.nextInt(0,1), getHeight()/2+ Randomizer.nextInt(1,220));
+        add(enemy[enemyNum]);
+        enemyCool = 100;
+        enemyNum++
+    }
+    enemyCool--;
+}
 function increaseScore(amount) {
     score = score + amount
+    console.log(score);
     if (String(score).length == 2) {
         for (let u = 0; u != 10; u++) {
             numbers[u].setPosition(99999, 99999);
         }
-        numbers[score % 10].setPosition(0,0);
-        numbers[score].setPosition(0,96);
+        for (let u = 10; u != 90; u += 10) {
+            numbers[u].setPosition(9999, 9999)
+        }
+        numbers[score % 10].setPosition(getWidth()/2,getHeight()/4 + 10);
+        numbers[score - (score % 10)].setPosition(getWidth()/2-96, getHeight()/4+10);
     } else if(String(score).length == 1) {
         for (let u = 0; u != 10; u++) {
             numbers[u].setPosition(99999, 99999);
@@ -118,13 +156,13 @@ function tickUndyneMini() {
         arrowCool--;
         //this makes the arrows move
         for (let o = 0; o != arrowNum; o++) {
-            if (arrow[o].getX() > 15 + playerCircle.getX() || arrow[o].getX() < playerCircle.getX() - 35) {
+            if (arrow[o].getX() > 25 + playerCircle.getX() || arrow[o].getX() < playerCircle.getX() - 45) {
                 if (arrow[o].getX() < playerCircle.getX()) {
                     arrow[o].move(.2,0);
                 } else {
                     arrow[o].move(-.2,0);
                 }
-            } else if (arrow[o].getY() > 18 + playerCircle.getY() || arrow[o].getY() < playerCircle.getY() - 28) {
+            } else if (arrow[o].getY() > 28 + playerCircle.getY() || arrow[o].getY() < playerCircle.getY() - 38) {
                 if (arrow[o].getY() < playerCircle.getY()) {
                     arrow[o].move(0,.2);
                 } else if (arrow[o].getY() > playerCircle.getY()){
@@ -133,7 +171,7 @@ function tickUndyneMini() {
             } else {
                 if (shield.containsPoint(arrow[o].getX(), arrow[o].getY())) {
                     arrow[o].setPosition(999999, 99999)
-                    score++;
+                    increaseScore(1);
                 } else {
                     stopTimer(tickTimingMinigame);
                     stopTimer(tickUndyneMini);
@@ -145,6 +183,7 @@ function tickUndyneMini() {
 }
 // ticks the timing minigame
 function tickTimingMinigame() {
+    timer = 1
     timingAngle = timingAngle + speed*(Math.PI/180);
     if (currMaxAng > 2*Math.PI) {
             if (timingAngle > Math.PI) {
@@ -170,61 +209,61 @@ function tickTimingMinigame() {
 }
 //checks if the marker is in the right spot to increase score
 function checkAllMini(keyboard) {
-    remove(tutorialText);
-    let pointX = getWidth()/8+60*Math.cos(timingAngle);
-    let pointY = getHeight()/4+60*Math.sin(timingAngle);
-    if (keyboard.key == " ") {
-        speed = 0 - speed;
-        if (currMaxAng > 2*Math.PI) {
-            if (timingAngle > Math.PI) {
+        remove(tutorialText);
+        let pointX = getWidth()/8+60*Math.cos(timingAngle);
+        let pointY = getHeight()/4+60*Math.sin(timingAngle);
+        if (keyboard.key == " ") {
+            speed = 0 - speed;
+            if (currMaxAng > 2*Math.PI) {
+                if (timingAngle > Math.PI) {
 
-            } else {
-                timingAngle = timingAngle + 2*Math.PI;
+                } else {
+                    timingAngle = timingAngle + 2*Math.PI;
+                }
+                
             }
-            
-        }
-        if (timingAngle >= currMinAng && timingAngle <= currMaxAng) {
-            maxAngle = maxAngle - (Math.PI/360);
-            if (speed < 0) {
-                speed = speed - .05
+            if (timingAngle >= currMinAng && timingAngle <= currMaxAng) {
+                maxAngle = maxAngle - (Math.PI/360);
+                if (speed < 0) {
+                    speed = speed - .05
+                } else {
+                    speed = speed + .05
+                }
+                increaseScore(1);
+                currMinAng = Randomizer.nextFloat(0, 2*Math.PI);
+                currMaxAng = currMinAng + maxAngle;
+                checkBoundMin.setEndpoint(getWidth()/8+70*Math.cos(currMinAng), getHeight()/4+70*Math.sin(currMinAng));
+                checkBoundMax.setEndpoint(getWidth()/8+70*Math.cos(currMaxAng), getHeight()/4+70*Math.sin(currMaxAng));
             } else {
-                speed = speed + .05
+                console.log(timingAngle);
+                console.log(currMaxAng);
+                console.log(currMinAng);
+                stopTimer(tickTimingMinigame);
+                stopTimer(tickUndyneMini);
             }
-            increaseScore(1);
-            currMinAng = Randomizer.nextFloat(0, 2*Math.PI);
-            currMaxAng = currMinAng + maxAngle;
-            checkBoundMin.setEndpoint(getWidth()/8+70*Math.cos(currMinAng), getHeight()/4+70*Math.sin(currMinAng));
-            checkBoundMax.setEndpoint(getWidth()/8+70*Math.cos(currMaxAng), getHeight()/4+70*Math.sin(currMaxAng));
-        } else {
-            console.log(timingAngle);
-            console.log(currMaxAng);
-            console.log(currMinAng);
-            stopTimer(tickTimingMinigame);
-            stopTimer(tickUndyneMini);
-        }
-            
 
-    }
-    switch (keyboard.key) {
-        case "ArrowUp":
-            shield.setRotation(270);
-            shield.setPosition(getWidth()/6 - 20, 3*getHeight()/4 - 40);
-            break;
-        case "ArrowDown":
-            shield.setRotation(90);
-            shield.setPosition(getWidth()/6 - 20, 3*getHeight()/4 + 20);
-            break;
-        case "ArrowRight":
-            shield.setRotation(0);
-            shield.setPosition(getWidth()/6 + 10, 3*getHeight()/4 - 10);
-            break;
-        case "ArrowLeft":
-            shield.setRotation(180);
-            shield.setPosition(getWidth()/6 - 50, 3*getHeight()/4 - 10);
-            break;
-        default:
-            break;
-    }
+
+        }
+        switch (keyboard.key) {
+            case "ArrowUp":
+                shield.setRotation(270);
+                shield.setPosition(getWidth()/6 - 20, 3*getHeight()/4 - 40);
+                break;
+            case "ArrowDown":
+                shield.setRotation(90);
+                shield.setPosition(getWidth()/6 - 20, 3*getHeight()/4 + 20);
+                break;
+            case "ArrowRight":
+                shield.setRotation(0);
+                shield.setPosition(getWidth()/6 + 10, 3*getHeight()/4 - 10);
+                break;
+            case "ArrowLeft":
+                shield.setRotation(180);
+                shield.setPosition(getWidth()/6 - 50, 3*getHeight()/4 - 10);
+                break;
+            default:
+                break;
+        }
 }
 let lines = {};
 for (let i = 0; i != 2; i++) {
@@ -249,3 +288,4 @@ add(checkBoundMax);
 keyDownMethod(checkAllMini);
 setTimer(tickTimingMinigame, 10);
 setTimer(tickUndyneMini, 10);
+setTimer(tickArrowMini, 10);
