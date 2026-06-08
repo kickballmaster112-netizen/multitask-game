@@ -1,3 +1,11 @@
+
+
+//SPLICE LINES 17,65-83, 117, 118, 123.
+//ALSO SPLICE THE ENTIRE UNDYNE MINIGAME
+//REMOVE THE BORDER LINES CODE
+
+
+
 setSize(600,450);
 //0  1  2 
 //3  4  5  6 
@@ -8,7 +16,7 @@ setSize(600,450);
 // lock breaking https://codehs.com/uploads/1d92da90c5c74318fb4060c3e466c6bf
 // laser https://codehs.com/uploads/30e7b180cc8fc982f6c93ea3424a4cb8
 // horizontal laser https://codehs.com/uploads/dbedd67170d8c7a9b1b3c1fe59e7994e
-let background = new Rectangle(getWidth(), getHeight());
+let background = new WebImage("https://codehs.com/uploads/16e4842676c5a0d9f43299b14c7fd42d")
 background.setColor("#DAB1DA");
 add(background);
 let tutorialText = new Text("press space while indicator is orange");
@@ -25,7 +33,7 @@ checkBoundMin.setPosition(getWidth()/8, getHeight()/4);
 checkBoundMax.setPosition(getWidth()/8, getHeight()/4);
 checkBoundMin.setEndpoint(getWidth()/8, getHeight()/4);
 checkBoundMax.setEndpoint(getWidth()/8, getHeight()/4);
-let score = 0;
+let score = 10;
 let currMinAng = 0;
 let currMaxAng = 2*Math.PI;
 let markerLine = new Line(getWidth()/8, getHeight()/4 - 50, getWidth()/8, getHeight()/4 - 70);
@@ -56,28 +64,25 @@ let enemyNum = 0
 // images for the score numbers (unfini)
 let link = {};
 
-link[0] ="https://codehs.com/uploads/2a88de20bbeef080be94572b57cfffb7";
-link[1] ="https://codehs.com/uploads/d41917d8e296c2d380faadb4f8ba8d55";
-link[2] ="https://codehs.com/uploads/1bf7421afc7c5a7d7b35e66eedce00d4";
-link[3] ="https://codehs.com/uploads/7f641724028c26f57df611e27878885c";
-link[4] ="https://codehs.com/uploads/e80d3268f5c115b7e4f37a614a606d40";
-link[5] ="https://codehs.com/uploads/18eab2b3498351ec6c34368e627ea4e0";
-link[6] ="https://codehs.com/uploads/8b09004f76b166df7ce7e722d74f145c";
-link[7] ="https://codehs.com/uploads/4b9e6eebf1b22c94384afd13d2662a71";
-link[8] ="https://codehs.com/uploads/49820f66aee096d0b57bd0284a5c698f";
-link[9] ="https://codehs.com/uploads/0b51d0feb8c0b81fa30c942da985f159";
-link[10] ="https://codehs.com/uploads/d41917d8e296c2d380faadb4f8ba8d55";
-link[20] ="https://codehs.com/uploads/1bf7421afc7c5a7d7b35e66eedce00d4";
-link[30] ="https://codehs.com/uploads/7f641724028c26f57df611e27878885c";
-link[40] ="https://codehs.com/uploads/e80d3268f5c115b7e4f37a614a606d40";
-link[50] ="https://codehs.com/uploads/18eab2b3498351ec6c34368e627ea4e0";
-link[60] ="https://codehs.com/uploads/8b09004f76b166df7ce7e722d74f145c";
-link[70] ="https://codehs.com/uploads/4b9e6eebf1b22c94384afd13d2662a71";
-link[80] ="https://codehs.com/uploads/49820f66aee096d0b57bd0284a5c698f";
-link[90] ="https://codehs.com/uploads/0b51d0feb8c0b81fa30c942da985f159";
-let scoreText = new WebImage("https://codehs.com/uploads/d356c669da69b7790f73e290ea09c02c");
-scoreText.setPosition(getWidth()/2 - 128, getHeight()/4 - 50)
-add(scoreText);
+link[0] ="https://codehs.com/uploads/71343009fdc3a323b7d6828dff9baff5";
+link[1] ="https://codehs.com/uploads/88e90a37643a99056e797cb15f69b3de";
+link[2] ="https://codehs.com/uploads/d7ec7357bf04e11133d0cfc7d334e10f";
+link[3] ="https://codehs.com/uploads/c8f8442202a27d74c2e2af0c6e68d4df";
+link[4] ="https://codehs.com/uploads/775da8ef80a8182d5e6ced4c9140680f";
+link[5] ="https://codehs.com/uploads/cb678276413c0735f33d3179219fe6c3";
+link[6] ="https://codehs.com/uploads/53078ca96a38c6b45665abde47f6fc0f";
+link[7] ="https://codehs.com/uploads/120bb5c75dcab2638f1c3a7217f3b2e7";
+link[8] ="https://codehs.com/uploads/e6e9ffb781c7c5e658377039be217083";
+link[9] ="https://codehs.com/uploads/15d35ff43ad1e6f1bc8e8c34cd86172d";
+link[10] ="https://codehs.com/uploads/88e90a37643a99056e797cb15f69b3de";
+link[20] ="https://codehs.com/uploads/d7ec7357bf04e11133d0cfc7d334e10f";
+link[30] ="https://codehs.com/uploads/c8f8442202a27d74c2e2af0c6e68d4df";
+link[40] ="https://codehs.com/uploads/775da8ef80a8182d5e6ced4c9140680f";
+link[50] ="https://codehs.com/uploads/cb678276413c0735f33d3179219fe6c3";
+link[60] ="https://codehs.com/uploads/53078ca96a38c6b45665abde47f6fc0f";
+link[70] ="https://codehs.com/uploads/120bb5c75dcab2638f1c3a7217f3b2e7";
+link[80] ="https://codehs.com/uploads/e6e9ffb781c7c5e658377039be217083";
+link[90] ="https://codehs.com/uploads/15d35ff43ad1e6f1bc8e8c34cd86172d";
 let numbers = {};
 for (let u = 0; u != 10; u++) {
     numbers[u] = new WebImage(link[u]);
@@ -85,7 +90,7 @@ for (let u = 0; u != 10; u++) {
     numbers[u].setSize(96,96);
     add(numbers[u]);
 }
-for (let u = 10; u != 90; u += 10) {
+for (let u = 10; u != 100; u += 10) {
     numbers[u] = new WebImage(link[u]);
     numbers[u].setPosition(9999, 9999);
     numbers[u].setSize(96,96);
@@ -111,15 +116,15 @@ function increaseScore(amount) {
         for (let u = 10; u != 90; u += 10) {
             numbers[u].setPosition(9999, 9999)
         }
-        numbers[score % 10].setPosition(getWidth()/2,getHeight()/4 + 10);
-        numbers[score - (score % 10)].setPosition(getWidth()/2-96, getHeight()/4+10);
+        numbers[score % 10].setPosition(getWidth()/2-13,getHeight()/4);
+        numbers[score - (score % 10)].setPosition(getWidth()/2-74, getHeight()/4);
     } else if(String(score).length == 1) {
         for (let u = 0; u != 10; u++) {
             numbers[u].setPosition(99999, 99999);
         }
-        numbers[score].setPosition(getWidth()/2 - 48, getHeight()/4 + 10);
+        numbers[score].setPosition(getWidth()/2 - 42, getHeight()/4);
     } else {
-        //REPLACE WITH WIN CONDITION
+        //REPLACE WITH WIN
     }
 }
 
@@ -127,10 +132,13 @@ function increaseScore(amount) {
 function tickUndyneMini() {
     if (score >= 10) {
         if (Randomizer.nextInt(0, 1) == 1 && arrowCool == 0) {
-            arrow[arrowNum] = new Rectangle(20,10);
+            arrow[arrowNum] = new WebImage("https://codehs.com/uploads/367d3adfccdc9d7b788096f17281900b");
+            arrow[arrowNum].setSize(20,10);
+            arrow[arrowNum].rotate(-90)
             arrow[arrowNum].setPosition(getWidth()/6-10, 3*getHeight()/4 )
             switch (Randomizer.nextInt(1,4)) {
                 case 1:
+                    arrow[arrowNum].rotate(180)
                     arrow[arrowNum].move(75,-5);
                     break;
                 case 2:
@@ -138,7 +146,7 @@ function tickUndyneMini() {
 
                     break;
                 case 3:
-                    arrow[arrowNum].rotate(90);
+                    arrow[arrowNum].rotate(270);
                     arrow[arrowNum].move(0,75);
                     break;
                 case 4:
@@ -265,17 +273,6 @@ function checkAllMini(keyboard) {
                 break;
         }
 }
-let lines = {};
-for (let i = 0; i != 2; i++) {
-    lines[i] = new Line(getWidth()/4 + getWidth()/4*i*2, getHeight()/2, getWidth()/4+getWidth()/4*i*2, 0);
-    add(lines[i]);
-}
-lines[2] = new Line(getWidth(), getHeight()/2, 0, getHeight()/2);
-add(lines[2]);
-lines[3] = new Line( 2*getWidth()/3, getHeight()/2, 2*getWidth()/3, getHeight());
-add(lines[3]);
-lines[4] = new Line( getWidth()/3, getHeight()/2, getWidth()/3, getHeight());
-add(lines[4]);
 let C = new Circle(60);
 C.setPosition(getWidth()/8, getHeight()/4);
 C.setFilled(false);
