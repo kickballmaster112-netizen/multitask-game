@@ -1,11 +1,3 @@
-
-
-//SPLICE LINES 17,65-83, 117, 118, 123.
-//ALSO SPLICE THE ENTIRE UNDYNE MINIGAME
-//REMOVE THE BORDER LINES CODE
-
-
-
 setSize(600,450);
 //0  1  2 
 //3  4  5  6 
@@ -33,7 +25,7 @@ checkBoundMin.setPosition(getWidth()/8, getHeight()/4);
 checkBoundMax.setPosition(getWidth()/8, getHeight()/4);
 checkBoundMin.setEndpoint(getWidth()/8, getHeight()/4);
 checkBoundMax.setEndpoint(getWidth()/8, getHeight()/4);
-let score = 10;
+let score = 0;
 let currMinAng = 0;
 let currMaxAng = 2*Math.PI;
 let markerLine = new Line(getWidth()/8, getHeight()/4 - 50, getWidth()/8, getHeight()/4 - 70);
@@ -58,10 +50,11 @@ playerLine1.lineWidth = 10;
 playerLine2.lineWidth = 10;
 add(playerLine1);
 add(playerLine2);
+let miniThreeMax = getHeight()/2+90;
+let miniThreeMin = getHeight() - 90;
 let enemyCool = 100;
 let enemy = {};
-let enemyNum = 0
-// images for the score numbers (unfini)
+let enemyNum = 0;
 let link = {};
 
 link[0] ="https://codehs.com/uploads/71343009fdc3a323b7d6828dff9baff5";
@@ -90,21 +83,47 @@ for (let u = 0; u != 10; u++) {
     numbers[u].setSize(96,96);
     add(numbers[u]);
 }
-for (let u = 10; u != 100; u += 10) {
+for (let u = 10; u != 90; u += 10) {
     numbers[u] = new WebImage(link[u]);
     numbers[u].setPosition(9999, 9999);
     numbers[u].setSize(96,96);
     add(numbers[u]);
 }
 function tickArrowMini() {
-    if (Randomizer.nextBoolean() && enemyCool == 0) {
-        enemy[enemyNum] = new WebImage("https://codehs.com/uploads/04b941dc93035ed51c9aa77e6f639b2b");
-        enemy[enemyNum].setPosition(5*getHeight()/6 + 100*Randomizer.nextInt(0,1), getHeight()/2+ Randomizer.nextInt(1,220));
-        add(enemy[enemyNum]);
-        enemyCool = 100;
-        enemyNum++
+    if (score >= 0) {
+        if (Randomizer.nextInt(0,3) == 2 && enemyCool <= 0) {
+            enemy[enemyNum] = new WebImage("https://codehs.com/uploads/04b941dc93035ed51c9aa77e6f639b2b");
+            enemy[enemyNum].setPosition(4*getWidth()/6 + 200*Randomizer.nextInt(0,1), getHeight()/2+ Randomizer.nextInt(1,190));
+            if (enemy[enemyNum].getX() > 4*getWidth()/6) {
+                enemy[enemyNum].rotate(180);
+                enemy[enemyNum].move(-32, 0);
+            }
+            add(enemy[enemyNum]);
+            enemyCool = 300;
+            enemyNum++
+        }else if (enemyCool <= 0) {
+            enemyCool = 51;
+        }
+        enemyCool--;
+        for (let h = 0; h != enemyNum; h++) {
+            if (enemy[h].getX() > 5*getWidth()/6) {
+                enemy[h].move(-.3,0);
+            } else if (enemy[h].getX()+32 < 5*getWidth()/6){
+                enemy[h].move(.3,0);
+            } else {
+                if (enemy[h].getX() < 5*getWidth()/6) {
+                    if (enemy[h].getY()+16 < miniThreeMax && enemy[h].getY()+16 > miniThreeMin) {
+                        enemy[h].setPosition(99999,99999);
+                    }
+                } else {
+                    if (enemy[h].getY()-16 < miniThreeMax && enemy[h].getY()-16 > miniThreeMin) {
+                        enemy[h].setPosition(99999,99999);
+                    }
+                }
+            }
+        }
     }
-    enemyCool--;
+    console.log(enemyCool);
 }
 function increaseScore(amount) {
     score = score + amount
@@ -124,7 +143,9 @@ function increaseScore(amount) {
         }
         numbers[score].setPosition(getWidth()/2 - 42, getHeight()/4);
     } else {
-        //REPLACE WITH WIN
+        stopTimer(tickTimingMinigame);
+        stopTimer(tickUndyneMini);
+        stopTimer(tickArrowMini);
     }
 }
 
@@ -248,6 +269,7 @@ function checkAllMini(keyboard) {
                 console.log(currMinAng);
                 stopTimer(tickTimingMinigame);
                 stopTimer(tickUndyneMini);
+                stopTimer(tickArrowMini);
             }
 
 
@@ -273,6 +295,17 @@ function checkAllMini(keyboard) {
                 break;
         }
 }
+let lines = {};
+for (let i = 0; i != 2; i++) {
+    lines[i] = new Line(getWidth()/4 + getWidth()/4*i*2, getHeight()/2, getWidth()/4+getWidth()/4*i*2, 0);
+    add(lines[i]);
+}
+lines[2] = new Line(getWidth(), getHeight()/2, 0, getHeight()/2);
+add(lines[2]);
+lines[3] = new Line( 2*getWidth()/3, getHeight()/2, 2*getWidth()/3, getHeight());
+add(lines[3]);
+lines[4] = new Line( getWidth()/3, getHeight()/2, getWidth()/3, getHeight());
+add(lines[4]);
 let C = new Circle(60);
 C.setPosition(getWidth()/8, getHeight()/4);
 C.setFilled(false);
