@@ -50,8 +50,8 @@ playerLine1.lineWidth = 10;
 playerLine2.lineWidth = 10;
 add(playerLine1);
 add(playerLine2);
-let miniThreeMax = getHeight()/2+90;
-let miniThreeMin = getHeight() - 90;
+let miniThreeMin = getHeight()/2+90;
+let miniThreeMax = getHeight() - 90;
 let enemyCool = 100;
 let enemy = {};
 let enemyNum = 0;
@@ -83,47 +83,85 @@ for (let u = 0; u != 10; u++) {
     numbers[u].setSize(96,96);
     add(numbers[u]);
 }
-for (let u = 10; u != 90; u += 10) {
+for (let u = 10; u != 100; u += 10) {
     numbers[u] = new WebImage(link[u]);
     numbers[u].setPosition(9999, 9999);
     numbers[u].setSize(96,96);
     add(numbers[u]);
 }
 function tickArrowMini() {
-    if (score >= 0) {
-        if (Randomizer.nextInt(0,3) == 2 && enemyCool <= 0) {
+    if (score >= 50) {
+        playerLine1.setEndpoint(5*getWidth()/6, miniThreeMin);
+        playerLine2.setEndpoint(5*getWidth()/6, miniThreeMax);
+        if (Randomizer.nextInt(0,2) == 2 && enemyCool <= 0) {
             enemy[enemyNum] = new WebImage("https://codehs.com/uploads/04b941dc93035ed51c9aa77e6f639b2b");
-            enemy[enemyNum].setPosition(4*getWidth()/6 + 200*Randomizer.nextInt(0,1), getHeight()/2+ Randomizer.nextInt(1,190));
-            if (enemy[enemyNum].getX() > 4*getWidth()/6) {
+            enemy[enemyNum].setPosition(4*getWidth()/6 + 180*Randomizer.nextInt(0,1) + 10, getHeight()/2+ Randomizer.nextInt(1,190));
+            if (enemy[enemyNum].getX() > 5*getWidth()/6) {
+                enemy[enemyNum].arrowDir = 1;
                 enemy[enemyNum].rotate(180);
                 enemy[enemyNum].move(-32, 0);
+            } else {
+                enemy[enemyNum].arrowDir = 0
             }
+            enemy[enemyNum].hasScored = 0;
             add(enemy[enemyNum]);
             enemyCool = 300;
-            enemyNum++
+            enemyNum++;
         }else if (enemyCool <= 0) {
             enemyCool = 51;
         }
         enemyCool--;
         for (let h = 0; h != enemyNum; h++) {
-            if (enemy[h].getX() > 5*getWidth()/6) {
-                enemy[h].move(-.3,0);
-            } else if (enemy[h].getX()+32 < 5*getWidth()/6){
-                enemy[h].move(.3,0);
+            if (enemy[h].getX() > getWidth() || enemy[h].getX() < 4*getWidth()/6) {
+                enemy[h].setPosition(9999,9999);
             } else {
-                if (enemy[h].getX() < 5*getWidth()/6) {
-                    if (enemy[h].getY()+16 < miniThreeMax && enemy[h].getY()+16 > miniThreeMin) {
-                        enemy[h].setPosition(99999,99999);
-                    }
+                if (enemy[h].arrowDir == 1) {
+                    console.log("a");
+                    enemy[h].move(-0.4, 0);
                 } else {
-                    if (enemy[h].getY()-16 < miniThreeMax && enemy[h].getY()-16 > miniThreeMin) {
-                        enemy[h].setPosition(99999,99999);
+                    console.log("b");
+                    enemy[h].move(0.4, 0)
+                }
+            }
+            if (enemy[h].arrowDir == 0) {
+                if (enemy[h].getX()+32 >= 5*getWidth()/6) {
+                    if (enemy[h].hasScored == 1) {
+                    } else {
+                        if (enemy[h].getY()+16 > miniThreeMin && enemy[h].getY()+16 < miniThreeMax) {
+                        if (enemy[h].hasScored == 0) {
+                            increaseScore(1);
+                            enemy[h].hasScored = 1;
+                            }
+                        } else {
+                            stopTimer(tickTimingMinigame);
+                            stopTimer(tickUndyneMini);
+                            stopTimer(tickArrowMini);
+                        }
                     }
+                    
+                }
+            } else {
+                if (enemy[h].getX() <= 5*getWidth()/6) {
+                    if (enemy[h].hasScored == 1) {
+                        
+                    } else {
+                        if (enemy[h].getY()+16 > miniThreeMin && enemy[h].getY()+16 < miniThreeMax) {
+                        if (enemy[h].hasScored == 0) {
+                            increaseScore(1);
+                            enemy[h].hasScored = 1;
+                            }
+                        } else {
+                            stopTimer(tickTimingMinigame);
+                            stopTimer(tickUndyneMini);
+                            stopTimer(tickArrowMini);
+                        }
+                    }
+                    
                 }
             }
         }
     }
-    console.log(enemyCool);
+    
 }
 function increaseScore(amount) {
     score = score + amount
@@ -294,18 +332,22 @@ function checkAllMini(keyboard) {
             default:
                 break;
         }
+        if (keyboard.key == "w") {
+            miniThreeMax-=3
+            miniThreeMin-=3
+            if (miniThreeMin <= getHeight()/2) {
+                miniThreeMax+=3
+                miniThreeMin+=3
+            }
+        } else if (keyboard.key == "s"){
+            miniThreeMax+=3
+            miniThreeMin+=3
+            if (miniThreeMax >= 450) {
+                miniThreeMax-=3
+                miniThreeMin-=3
+            }
+        }
 }
-let lines = {};
-for (let i = 0; i != 2; i++) {
-    lines[i] = new Line(getWidth()/4 + getWidth()/4*i*2, getHeight()/2, getWidth()/4+getWidth()/4*i*2, 0);
-    add(lines[i]);
-}
-lines[2] = new Line(getWidth(), getHeight()/2, 0, getHeight()/2);
-add(lines[2]);
-lines[3] = new Line( 2*getWidth()/3, getHeight()/2, 2*getWidth()/3, getHeight());
-add(lines[3]);
-lines[4] = new Line( getWidth()/3, getHeight()/2, getWidth()/3, getHeight());
-add(lines[4]);
 let C = new Circle(60);
 C.setPosition(getWidth()/8, getHeight()/4);
 C.setFilled(false);
