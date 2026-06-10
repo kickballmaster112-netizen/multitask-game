@@ -8,16 +8,18 @@ setSize(600,450);
 // lock breaking https://codehs.com/uploads/1d92da90c5c74318fb4060c3e466c6bf
 // laser https://codehs.com/uploads/30e7b180cc8fc982f6c93ea3424a4cb8
 // horizontal laser https://codehs.com/uploads/dbedd67170d8c7a9b1b3c1fe59e7994e
+let distance = 0;
 let background = new WebImage("https://codehs.com/uploads/16e4842676c5a0d9f43299b14c7fd42d")
 background.setColor("#DAB1DA");
 add(background);
+let fourthCool = 9;
 let tutorialText = new Text("press space while indicator is orange");
 tutorialText.setColor("green");
 tutorialText.setPosition(0, 20);
 add(tutorialText);
 let checkBoundMin = new Line(0, 0, 0, 0);
 checkBoundMin.lineWidth = 10;
-checkBoundMin.setColor("green");
+checkBoundMin.setColor("orange");
 let checkBoundMax = new Line(0, 0, 0, 0);
 checkBoundMax.lineWidth = 10;
 checkBoundMax.setColor("blue");
@@ -34,12 +36,13 @@ markerLine.setColor("blue");
 markerLine.lineWidth = 10;
 let timingAngle = 0;
 let speed = .5;
+let circleColor = new Color(0, 0, 0);
 let maxAngle = Math.PI;
 let arrowNum = 0;
 let arrow = {};
 let arrowCool = 10;
 let playerCircle = new Circle(8);
-let shield = new WebImage("https://codehs.com/uploads/07538adb23f4eef818dd13f64d1723df");
+let shield = new WebImage("https://codehs.com/uploads/03d3252e5994fc46327e869248e29fa8");
 shield.setPosition(getWidth()/6+5, 3*getHeight()/4-10)
 add(shield);
 playerCircle.setPosition(getWidth()/6, 3*getHeight()/4);
@@ -50,6 +53,27 @@ playerLine1.lineWidth = 10;
 playerLine2.lineWidth = 10;
 add(playerLine1);
 add(playerLine2);
+let randomVariableImUsingForLikeOneLineOfCode = 0;
+let playerPos = 1;
+let player = new Circle(15);
+player.setColor("blue");
+player.setOpacity(.5);
+player.setPosition(7*getWidth()/8, getHeight()/4);
+add(player);
+let circlePlayer1 = new Circle(10);
+circlePlayer1.setOpacity(1);
+circlePlayer1.setPosition(7*getWidth()/8, getHeight()/4);
+add(circlePlayer1);
+let circlePlayer2 = new Circle(10);
+circlePlayer2.setOpacity(1);
+circlePlayer2.setPosition(7*getWidth()/8, getHeight()/4-50);
+add(circlePlayer2);
+let circlePlayer3 = new Circle(10);
+circlePlayer3.setOpacity(1);
+circlePlayer3.setPosition(7*getWidth()/8, getHeight()/4+50);
+add(circlePlayer3);
+let hurting = 0;
+
 let miniThreeMin = getHeight()/2+90;
 let miniThreeMax = getHeight() - 90;
 let enemyCool = 100;
@@ -89,8 +113,33 @@ for (let u = 10; u != 100; u += 10) {
     numbers[u].setSize(96,96);
     add(numbers[u]);
 }
+function tickFourMini() {
+    if (score >= 0) {
+        circleColor = new Color(randomVariableImUsingForLikeOneLineOfCode, 0, 0);
+        switch (playerPos) {
+            case 0:
+                distance = circlePlayer2.getY() - player.getY();
+                break;
+            case 1:
+                distance = circlePlayer1.getY() - player.getY();
+                break;
+            case 2:
+                distance = circlePlayer3.getY() - player.getY();
+                break;
+            default:
+                break;
+        }
+        if (Math.abs(distance) <= 1) {
+            player.move(0,distance)
+        } else {
+            player.move(0, distance/10);
+        }
+        
+    }
+}
+
 function tickArrowMini() {
-    if (score >= 50) {
+    if (score >= 30) {
         playerLine1.setEndpoint(5*getWidth()/6, miniThreeMin);
         playerLine2.setEndpoint(5*getWidth()/6, miniThreeMax);
         if (Randomizer.nextInt(0,2) == 2 && enemyCool <= 0) {
@@ -136,6 +185,7 @@ function tickArrowMini() {
                             stopTimer(tickTimingMinigame);
                             stopTimer(tickUndyneMini);
                             stopTimer(tickArrowMini);
+                            stopTimer(tickFourMini);
                         }
                     }
                     
@@ -154,6 +204,7 @@ function tickArrowMini() {
                             stopTimer(tickTimingMinigame);
                             stopTimer(tickUndyneMini);
                             stopTimer(tickArrowMini);
+                            stopTimer(tickFourMini);
                         }
                     }
                     
@@ -184,6 +235,7 @@ function increaseScore(amount) {
         stopTimer(tickTimingMinigame);
         stopTimer(tickUndyneMini);
         stopTimer(tickArrowMini);
+        stopTimer(tickFourMini);
     }
 }
 
@@ -191,7 +243,7 @@ function increaseScore(amount) {
 function tickUndyneMini() {
     if (score >= 10) {
         if (Randomizer.nextInt(0, 1) == 1 && arrowCool == 0) {
-            arrow[arrowNum] = new WebImage("https://codehs.com/uploads/367d3adfccdc9d7b788096f17281900b");
+            arrow[arrowNum] = new WebImage("https://codehs.com/uploads/4305411a97058db562620e1ded734ed9");
             arrow[arrowNum].setSize(20,10);
             arrow[arrowNum].rotate(-90)
             arrow[arrowNum].setPosition(getWidth()/6-10, 3*getHeight()/4 )
@@ -242,6 +294,8 @@ function tickUndyneMini() {
                 } else {
                     stopTimer(tickTimingMinigame);
                     stopTimer(tickUndyneMini);
+                    stopTimer(tickArrowMini);
+                    stopTimer(tickFourMini);
                 }
             }
         }
@@ -273,6 +327,7 @@ function tickTimingMinigame() {
     }
     markerLine.setEndpoint(getWidth()/8+50*Math.cos(timingAngle), getHeight()/4+50*Math.sin(timingAngle));
     markerLine.setPosition(getWidth()/8+70*Math.cos(timingAngle), getHeight()/4+70*Math.sin(timingAngle));
+    
 }
 //checks if the marker is in the right spot to increase score
 function checkAllMini(keyboard) {
@@ -308,6 +363,7 @@ function checkAllMini(keyboard) {
                 stopTimer(tickTimingMinigame);
                 stopTimer(tickUndyneMini);
                 stopTimer(tickArrowMini);
+                stopTimer(tickFourMini);
             }
 
 
@@ -347,6 +403,17 @@ function checkAllMini(keyboard) {
                 miniThreeMin-=3
             }
         }
+    if (keyboard.key == "a") {
+       playerPos--; 
+       if (playerPos < 0) {
+        playerPos=0;
+       }
+    } else if (keyboard.key == "d") {
+        playerPos++;
+        if (playerPos > 2) {
+            playerPos = 2
+        }
+    }
 }
 let C = new Circle(60);
 C.setPosition(getWidth()/8, getHeight()/4);
@@ -361,3 +428,4 @@ keyDownMethod(checkAllMini);
 setTimer(tickTimingMinigame, 10);
 setTimer(tickUndyneMini, 10);
 setTimer(tickArrowMini, 10);
+setTimer(tickFourMini, 10);
