@@ -55,7 +55,7 @@ add(playerLine1);
 add(playerLine2);
 let randomVariableImUsingForLikeOneLineOfCode = 0;
 let playerPos = 1;
-let player = new Circle(15);
+let player = new Circle(15.5);
 player.setColor("blue");
 player.setOpacity(.5);
 player.setPosition(7*getWidth()/8, getHeight()/4);
@@ -73,7 +73,7 @@ circlePlayer3.setOpacity(1);
 circlePlayer3.setPosition(7*getWidth()/8, getHeight()/4+50);
 add(circlePlayer3);
 let hurting = 0;
-
+let r = 10;
 let miniThreeMin = getHeight()/2+90;
 let miniThreeMax = getHeight() - 90;
 let enemyCool = 100;
@@ -114,7 +114,7 @@ for (let u = 10; u != 100; u += 10) {
     add(numbers[u]);
 }
 function tickFourMini() {
-    if (score >= 0) {
+    if (score >= 40) {
         circleColor = new Color(randomVariableImUsingForLikeOneLineOfCode, 0, 0);
         switch (playerPos) {
             case 0:
@@ -134,12 +134,40 @@ function tickFourMini() {
         } else {
             player.move(0, distance/10);
         }
+        if (r >= 15.5) {
+            stopTimer(tickTimingMinigame);
+            stopTimer(tickUndyneMini);
+            stopTimer(tickArrowMini);
+            stopTimer(tickFourMini);
+        }
+        switch (playerPos) {
+            case 0:
+                circlePlayer1.setRadius(10);
+                circlePlayer3.setRadius(10);
+                r+=.01
+                circlePlayer2.setRadius(r);
+                break;
+            case 1:
+                circlePlayer3.setRadius(10);
+                circlePlayer2.setRadius(10);
+                r+=.01
+                circlePlayer1.setRadius(r);
+                break;
+            case 2:
+                circlePlayer1.setRadius(10);
+                circlePlayer2.setRadius(10);
+                r+=.01
+                circlePlayer3.setRadius(r);
+                break;
+            default:
+                break;
+        }
         
     }
 }
 
 function tickArrowMini() {
-    if (score >= 30) {
+    if (score >= 70) {
         playerLine1.setEndpoint(5*getWidth()/6, miniThreeMin);
         playerLine2.setEndpoint(5*getWidth()/6, miniThreeMax);
         if (Randomizer.nextInt(0,2) == 2 && enemyCool <= 0) {
@@ -232,6 +260,10 @@ function increaseScore(amount) {
         }
         numbers[score].setPosition(getWidth()/2 - 42, getHeight()/4);
     } else {
+        removeAll()
+        let winText = new Text("You Win!!! :3");
+        winText.setPosition(getWidth()/2- 75, getHeight()/2- 25);
+        add(winText);
         stopTimer(tickTimingMinigame);
         stopTimer(tickUndyneMini);
         stopTimer(tickArrowMini);
@@ -405,13 +437,24 @@ function checkAllMini(keyboard) {
         }
     if (keyboard.key == "a") {
        playerPos--; 
+       
        if (playerPos < 0) {
         playerPos=0;
+       } else {
+            if (r > 14.5) {
+                increaseScore(1);
+            }
+            r = 10;
        }
     } else if (keyboard.key == "d") {
         playerPos++;
         if (playerPos > 2) {
             playerPos = 2
+        } else {
+            if (r > 14.5) {
+                increaseScore(1);
+            }
+            r = 10;
         }
     }
 }
