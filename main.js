@@ -8,15 +8,15 @@ setSize(600,450);
 // lock breaking https://codehs.com/uploads/1d92da90c5c74318fb4060c3e466c6bf
 // laser https://codehs.com/uploads/30e7b180cc8fc982f6c93ea3424a4cb8
 // horizontal laser https://codehs.com/uploads/dbedd67170d8c7a9b1b3c1fe59e7994e
+let tutorialText;
+let tutorialBox;
+let removeText;
+let tutMilestone = 0;
 let distance = 0;
 let background = new WebImage("https://codehs.com/uploads/16e4842676c5a0d9f43299b14c7fd42d")
 background.setColor("#DAB1DA");
 add(background);
 let fourthCool = 9;
-let tutorialText = new Text("press space while indicator is orange");
-tutorialText.setColor("green");
-tutorialText.setPosition(0, 20);
-add(tutorialText);
 let checkBoundMin = new Line(0, 0, 0, 0);
 checkBoundMin.lineWidth = 10;
 checkBoundMin.setColor("orange");
@@ -37,7 +37,7 @@ markerLine.lineWidth = 10;
 let timingAngle = 0;
 let speed = .5;
 let circleColor = new Color(0, 0, 0);
-let maxAngle = Math.PI;
+let maxAngle = Math.PI / 1.5;
 let arrowNum = 0;
 let arrow = {};
 let arrowCool = 10;
@@ -53,9 +53,9 @@ playerLine1.lineWidth = 10;
 playerLine2.lineWidth = 10;
 add(playerLine1);
 add(playerLine2);
-let randomVariableImUsingForLikeOneLineOfCode = 0;
+
 let playerPos = 1;
-let player = new Circle(15.5);
+let player = new Circle(16);
 player.setColor("blue");
 player.setOpacity(.5);
 player.setPosition(7*getWidth()/8, getHeight()/4);
@@ -115,7 +115,6 @@ for (let u = 10; u != 100; u += 10) {
 }
 function tickFourMini() {
     if (score >= 40) {
-        circleColor = new Color(randomVariableImUsingForLikeOneLineOfCode, 0, 0);
         switch (playerPos) {
             case 0:
                 distance = circlePlayer2.getY() - player.getY();
@@ -142,22 +141,40 @@ function tickFourMini() {
         }
         switch (playerPos) {
             case 0:
+                circlePlayer2.setColor("black");
+                circlePlayer1.setColor("black");
+                circlePlayer3.setColor("black");
                 circlePlayer1.setRadius(10);
                 circlePlayer3.setRadius(10);
                 r+=.01
                 circlePlayer2.setRadius(r);
+                if (r > 15) {
+                    circlePlayer2.setColor("red");
+                }
                 break;
             case 1:
+                circlePlayer2.setColor("black");
+                circlePlayer1.setColor("black");
+                circlePlayer3.setColor("black");
                 circlePlayer3.setRadius(10);
                 circlePlayer2.setRadius(10);
                 r+=.01
                 circlePlayer1.setRadius(r);
+                if (r > 15) {
+                    circlePlayer1.setColor("red");
+                }
                 break;
             case 2:
+                circlePlayer2.setColor("black");
+                circlePlayer1.setColor("black");
+                circlePlayer3.setColor("black");
                 circlePlayer1.setRadius(10);
                 circlePlayer2.setRadius(10);
                 r+=.01
                 circlePlayer3.setRadius(r);
+                if (r > 15) {
+                    circlePlayer3.setColor("red");
+                }
                 break;
             default:
                 break;
@@ -193,10 +210,8 @@ function tickArrowMini() {
                 enemy[h].setPosition(9999,9999);
             } else {
                 if (enemy[h].arrowDir == 1) {
-                    console.log("a");
                     enemy[h].move(-0.4, 0);
                 } else {
-                    console.log("b");
                     enemy[h].move(0.4, 0)
                 }
             }
@@ -244,7 +259,6 @@ function tickArrowMini() {
 }
 function increaseScore(amount) {
     score = score + amount
-    console.log(score);
     if (String(score).length == 2) {
         for (let u = 0; u != 10; u++) {
             numbers[u].setPosition(99999, 99999);
@@ -268,6 +282,41 @@ function increaseScore(amount) {
         stopTimer(tickUndyneMini);
         stopTimer(tickArrowMini);
         stopTimer(tickFourMini);
+    }
+    if (score == tutMilestone) {
+        stopTimer(tickTimingMinigame);
+        stopTimer(tickUndyneMini);
+        stopTimer(tickArrowMini);
+        stopTimer(tickFourMini);
+        tutorialBox = new Rectangle(3*getWidth()/4, 3*getHeight()/4);
+        tutorialBox.setPosition(getWidth()/8, getHeight()/8);
+        tutorialBox.setColor("white");
+        tutorialBox.setBorderWidth(5);
+        tutorialBox.setBorderColor("gray");
+        add(tutorialBox);
+        removeText = new Text("press F to continue");
+        removeText.setPosition(getWidth()/8 + 5, getHeight()/8*7 - 5);
+        add(removeText);
+        switch (tutMilestone) {
+            case 0:
+                tutorialText = new Text("press space when the indicator is orange", "10pt Arial");
+                break;
+            case 10:
+                tutorialText = new Text("use arrow keys to block the incoming projectiles", "10pt Arial");
+                break;
+            case 40:
+                tutorialText = new Text("use A&D to move dot. don't let it become filled", "10pt Arial");
+                break;
+            case 70:
+                tutorialText = new Text("use W&S to move the gap so that the arrows pass through it", "10pt Arial");
+                break;
+            default:
+                tutorialText = new Text("how?????? how did you manage to get this text??? unless you edited code lol", "10pt Arial");
+                break;
+        }
+        tutorialText.setPosition(getWidth()/8 + 5, getHeight()/2);
+        add(tutorialText);
+
     }
 }
 
@@ -336,7 +385,6 @@ function tickUndyneMini() {
 }
 // ticks the timing minigame
 function tickTimingMinigame() {
-    timer = 1
     timingAngle = timingAngle + speed*(Math.PI/180);
     if (currMaxAng > 2*Math.PI) {
             if (timingAngle > Math.PI) {
@@ -359,11 +407,31 @@ function tickTimingMinigame() {
     }
     markerLine.setEndpoint(getWidth()/8+50*Math.cos(timingAngle), getHeight()/4+50*Math.sin(timingAngle));
     markerLine.setPosition(getWidth()/8+70*Math.cos(timingAngle), getHeight()/4+70*Math.sin(timingAngle));
-    
 }
 //checks if the marker is in the right spot to increase score
 function checkAllMini(keyboard) {
-        remove(tutorialText);
+        if (score == tutMilestone) {
+            remove(tutorialBox);
+            remove(tutorialText);
+            remove(removeText);
+            switch (tutMilestone) {
+                case 0:
+                    tutMilestone = 10;
+                    break;
+                case 10:
+                    tutMilestone = 40;
+                    break;
+                case 40:
+                    tutMilestone = 70;
+                    break;
+                default:
+                    break;
+            }
+            setTimer(tickTimingMinigame, 10);
+            setTimer(tickUndyneMini, 10);
+            setTimer(tickArrowMini, 10);
+            setTimer(tickFourMini, 10);
+        }
         let pointX = getWidth()/8+60*Math.cos(timingAngle);
         let pointY = getHeight()/4+60*Math.sin(timingAngle);
         if (keyboard.key == " ") {
@@ -377,7 +445,7 @@ function checkAllMini(keyboard) {
                 
             }
             if (timingAngle >= currMinAng && timingAngle <= currMaxAng) {
-                maxAngle = maxAngle - (Math.PI/360);
+                maxAngle = maxAngle - (Math.PI/180);
                 if (speed < 0) {
                     speed = speed - .05
                 } else {
@@ -389,9 +457,6 @@ function checkAllMini(keyboard) {
                 checkBoundMin.setEndpoint(getWidth()/8+70*Math.cos(currMinAng), getHeight()/4+70*Math.sin(currMinAng));
                 checkBoundMax.setEndpoint(getWidth()/8+70*Math.cos(currMaxAng), getHeight()/4+70*Math.sin(currMaxAng));
             } else {
-                console.log(timingAngle);
-                console.log(currMaxAng);
-                console.log(currMinAng);
                 stopTimer(tickTimingMinigame);
                 stopTimer(tickUndyneMini);
                 stopTimer(tickArrowMini);
@@ -435,28 +500,28 @@ function checkAllMini(keyboard) {
                 miniThreeMin-=3
             }
         }
-    if (keyboard.key == "a") {
-       playerPos--; 
-       
-       if (playerPos < 0) {
-        playerPos=0;
-       } else {
-            if (r > 14.5) {
+
+        if (keyboard.key == "a") {
+            playerPos--; 
+            if (playerPos < 0) {
+                playerPos = 0;
+            } else {
+                if (r > 14) {
+                    increaseScore(1);
+                }
+                r = 8.5;
+            }
+        } else if (keyboard.key == "d") {
+            playerPos++;
+            if (playerPos > 2) {
+                playerPos = 2
+            } else {
+            if (r > 14) {
                 increaseScore(1);
             }
-            r = 10;
-       }
-    } else if (keyboard.key == "d") {
-        playerPos++;
-        if (playerPos > 2) {
-            playerPos = 2
-        } else {
-            if (r > 14.5) {
-                increaseScore(1);
+            r = 8.5;
             }
-            r = 10;
         }
-    }
 }
 let C = new Circle(60);
 C.setPosition(getWidth()/8, getHeight()/4);
@@ -472,3 +537,4 @@ setTimer(tickTimingMinigame, 10);
 setTimer(tickUndyneMini, 10);
 setTimer(tickArrowMini, 10);
 setTimer(tickFourMini, 10);
+increaseScore(0);
