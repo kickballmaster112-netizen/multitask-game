@@ -8,6 +8,7 @@ setSize(600,450);
 // lock breaking https://codehs.com/uploads/1d92da90c5c74318fb4060c3e466c6bf
 // laser https://codehs.com/uploads/30e7b180cc8fc982f6c93ea3424a4cb8
 // horizontal laser https://codehs.com/uploads/dbedd67170d8c7a9b1b3c1fe59e7994e
+let start = false;
 let tutorialText;
 let tutorialBox;
 let removeText;
@@ -410,6 +411,7 @@ function tickTimingMinigame() {
 }
 //checks if the marker is in the right spot to increase score
 function checkAllMini(keyboard) {
+    if (start) {
         if (score == tutMilestone) {
             remove(tutorialBox);
             remove(tutorialText);
@@ -522,6 +524,22 @@ function checkAllMini(keyboard) {
             r = 8.5;
             }
         }
+    } else {
+        start = true;
+    }
+}
+function checkStart() {
+    if (start) {
+        remove(startScreen);
+        remove(startText);
+        remove(startTut);
+        setTimer(tickTimingMinigame, 10);
+        setTimer(tickUndyneMini, 10);
+        setTimer(tickArrowMini, 10);
+        setTimer(tickFourMini, 10);
+        increaseScore(0);
+        stopTimer(checkStart);
+    }
 }
 let C = new Circle(60);
 C.setPosition(getWidth()/8, getHeight()/4);
@@ -532,9 +550,17 @@ add(C);
 add(markerLine);
 add(checkBoundMin);
 add(checkBoundMax);
+let startScreen = new Rectangle(getWidth(), getHeight());
+startScreen.setColor("white");
+let startText = new WebImage("https://codehs.com/uploads/10987e68c3781fa7a7ffc4ae566699db")
+startText.setPosition(100, 10);
+startText.setSize(400, 70)
+let startTut = new Text("press any button");
+startTut.setPosition(5, getHeight()-5);
+add(startScreen);
+add(startTut);
+add(startText);
 keyDownMethod(checkAllMini);
-setTimer(tickTimingMinigame, 10);
-setTimer(tickUndyneMini, 10);
-setTimer(tickArrowMini, 10);
-setTimer(tickFourMini, 10);
-increaseScore(0);
+setTimer(checkStart, 10);
+
+
