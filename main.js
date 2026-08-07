@@ -1,13 +1,6 @@
 setSize(600,450);
-//0  1  2 
-//3  4  5  6 
-//7  8  9 
-// lock https://codehs.com/uploads/d3355b4942c62d2c8f532a1641b9919b
-// arrow https://codehs.com/uploads/367d3adfccdc9d7b788096f17281900b
-// ship https://codehs.com/uploads/04b941dc93035ed51c9aa77e6f639b2b
-// lock breaking https://codehs.com/uploads/1d92da90c5c74318fb4060c3e466c6bf
-// laser https://codehs.com/uploads/30e7b180cc8fc982f6c93ea3424a4cb8
-// horizontal laser https://codehs.com/uploads/dbedd67170d8c7a9b1b3c1fe59e7994e
+let winRot = 0;
+let winText;
 let start = false;
 let tutorialText;
 let tutorialBox;
@@ -259,7 +252,7 @@ function tickArrowMini() {
     
 }
 function increaseScore(amount) {
-    score = score + amount
+    score = score + amount;
     if (String(score).length == 2) {
         for (let u = 0; u != 10; u++) {
             numbers[u].setPosition(99999, 99999);
@@ -275,14 +268,17 @@ function increaseScore(amount) {
         }
         numbers[score].setPosition(getWidth()/2 - 42, getHeight()/4);
     } else {
-        removeAll()
-        let winText = new Text("You Win!!! :3");
-        winText.setPosition(getWidth()/2- 75, getHeight()/2- 25);
+        removeAll();
+        add(background);
+        winText = new Text("You Win!!!");
+        winText.setPosition(getWidth()/2- 63, getHeight()/2- 50);
         add(winText);
         stopTimer(tickTimingMinigame);
         stopTimer(tickUndyneMini);
         stopTimer(tickArrowMini);
         stopTimer(tickFourMini);
+        setTimer(bounceEffect, 20);
+        console.log("if you see this, you have the console open");
     }
     if (score == tutMilestone) {
         stopTimer(tickTimingMinigame);
@@ -540,6 +536,10 @@ function checkStart() {
         increaseScore(0);
         stopTimer(checkStart);
     }
+}
+function bounceEffect() {
+    winText.setRotation(Math.sin(winRot)/8 , 1);
+    winRot = winRot + .06
 }
 let C = new Circle(60);
 C.setPosition(getWidth()/8, getHeight()/4);
